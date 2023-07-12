@@ -13,13 +13,13 @@ mixin _$DataModelStore on _DataModelStore, Store {
       Atom(name: '_DataModelStore.listOfDataFromFuture', context: context);
 
   @override
-  ObservableFuture<List<DataModel>>? get listOfDataFromFuture {
+  ObservableFuture<NewsModel>? get listOfDataFromFuture {
     _$listOfDataFromFutureAtom.reportRead();
     return super.listOfDataFromFuture;
   }
 
   @override
-  set listOfDataFromFuture(ObservableFuture<List<DataModel>>? value) {
+  set listOfDataFromFuture(ObservableFuture<NewsModel>? value) {
     _$listOfDataFromFutureAtom.reportWrite(value, super.listOfDataFromFuture,
         () {
       super.listOfDataFromFuture = value;
@@ -30,13 +30,13 @@ mixin _$DataModelStore on _DataModelStore, Store {
       Atom(name: '_DataModelStore.selectedItem', context: context);
 
   @override
-  DataModel? get selectedItem {
+  Data? get selectedItem {
     _$selectedItemAtom.reportRead();
     return super.selectedItem;
   }
 
   @override
-  set selectedItem(DataModel? value) {
+  set selectedItem(Data? value) {
     _$selectedItemAtom.reportWrite(value, super.selectedItem, () {
       super.selectedItem = value;
     });
@@ -78,13 +78,13 @@ mixin _$DataModelStore on _DataModelStore, Store {
       Atom(name: '_DataModelStore.listFavourites', context: context);
 
   @override
-  ObservableList<DataModel> get listFavourites {
+  ObservableList<Data> get listFavourites {
     _$listFavouritesAtom.reportRead();
     return super.listFavourites;
   }
 
   @override
-  set listFavourites(ObservableList<DataModel> value) {
+  set listFavourites(ObservableList<Data> value) {
     _$listFavouritesAtom.reportWrite(value, super.listFavourites, () {
       super.listFavourites = value;
     });
@@ -94,7 +94,7 @@ mixin _$DataModelStore on _DataModelStore, Store {
       ActionController(name: '_DataModelStore', context: context);
 
   @override
-  void addfavourites(DataModel item) {
+  void addfavourites(Data item) {
     final _$actionInfo = _$_DataModelStoreActionController.startAction(
         name: '_DataModelStore.addfavourites');
     try {
@@ -138,7 +138,7 @@ mixin _$DataModelStore on _DataModelStore, Store {
   }
 
   @override
-  void onItemSelected(DataModel item) {
+  void onItemSelected(Data item) {
     final _$actionInfo = _$_DataModelStoreActionController.startAction(
         name: '_DataModelStore.onItemSelected');
     try {

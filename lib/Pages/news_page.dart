@@ -11,7 +11,7 @@ class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dataModelStore = context.read<DataModelStore>();
-    //dataModelStore.getData();
+    // dataModelStore.getData();
     final futureList = dataModelStore.listOfDataFromFuture;
     return Scaffold(
       appBar: AppBar(
@@ -27,6 +27,8 @@ class NewsPage extends StatelessWidget {
                 child: CircularProgressIndicator(color: Colors.teal),
               );
             case FutureStatus.rejected:
+              print(futureList.error);
+              print(futureList.result);
               return Center(
                 child: Column(
                   children: [
@@ -51,19 +53,24 @@ class NewsPage extends StatelessWidget {
                 ),
               );
             case FutureStatus.fulfilled:
-              final List<DataModel> listOfData = futureList.result;
+              final NewsModel news = futureList.result;
               return RefreshIndicator(
                 onRefresh: () {
                   return dataModelStore.fetchData();
                 },
                 child: ListView.builder(
-                  itemCount: listOfData.length,
+                  itemCount: news.data?.length,
                   shrinkWrap: true,
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    final data = listOfData[index];
+                    final data = news.data?[index];
                     debugPrint("$data");
                     return ListTile(
+                      onTap: (){
+                        dataModelStore.onItemSelected(news.data![index]);
+                        // debugPrint(dataModelStore.selectedItem?.images);
+                        Navigator.pushNamed(context, '/SelectedNews');
+                      },
                       leading: LayoutBuilder(
                         builder:
                             (BuildContext context, BoxConstraints constraints) {
@@ -72,10 +79,11 @@ class NewsPage extends StatelessWidget {
                           final imageHeight = availableHeight * 0.75;
                           debugPrint("$imageHeight");
                           debugPrint("${imageHeight / 25}");
+                          debugPrint("${data?.time}");
                           return FractionallySizedBox(
                             heightFactor: imageHeight / 25,
                             child: Image.network(
-                              data.images,
+                              data!.images ?? "",
                               width: 125,
                               height: 100,
                               fit: BoxFit.cover,
@@ -88,30 +96,31 @@ class NewsPage extends StatelessWidget {
                         children: [
                           Expanded(
                             flex: 1,
-                            child: Text("Written by ${data.author}",
+                            child: Text("Written by ${data?.author}",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12,
                                     color: Colors.grey)),
                           ),
-                          TextButton(
-                            style: const ButtonStyle(
-                                padding: MaterialStatePropertyAll(
-                                    EdgeInsets.symmetric(
-                                        horizontal: 0, vertical: 0))),
-                            onPressed: () {
-                              dataModelStore.onItemSelected(listOfData[index]);
-                              // debugPrint(dataModelStore.selectedItem?.images);
-                              Navigator.pushNamed(context, '/SelectedNews');
-                            },
-                            child: const Text("read more",
-                                style: TextStyle(
-                                    color: Colors.teal,
-                                    fontWeight: FontWeight.w400)),
-                          ),
+                          Text("${data?.time}"),
+                          // TextButton(
+                          //   style: const ButtonStyle(
+                          //       padding: MaterialStatePropertyAll(
+                          //           EdgeInsets.symmetric(
+                          //               horizontal: 0, vertical: 0))),
+                          //   onPressed: () {
+                          //     dataModelStore.onItemSelected(news.data![index]);
+                          //     // debugPrint(dataModelStore.selectedItem?.images);
+                          //     Navigator.pushNamed(context, '/SelectedNews');
+                          //   },
+                          //   child: const Text("read more",
+                          //       style: TextStyle(
+                          //           color: Colors.teal,
+                          //           fontWeight: FontWeight.w400)),
+                          // ),
                         ],
                       ),
-                      title: Text(data.title,
+                      title: Text(data!.title ?? "",
                           style: const TextStyle(
                               color: Colors.black,
                               fontSize: 15,
