@@ -13,20 +13,18 @@ class SelectedNewsPage extends StatelessWidget {
     // print("${dataModelStore}----------");
     //   final selectediItem=ModalRoute.of(context)!.settings.arguments;
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        toolbarHeight: 50,
-        automaticallyImplyLeading: true,
-        backgroundColor: Colors.teal,
-        foregroundColor: Colors.white,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-            systemNavigationBarColor: Colors.teal,
-            statusBarIconBrightness: Brightness.light,
-            statusBarColor: Colors.teal),
-      ),
+          toolbarHeight: 50,
+          automaticallyImplyLeading: true,
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          systemOverlayStyle: SystemUiOverlayStyle.dark),
       body: Observer(
         builder: (context) {
           // print("selected page  --> ${dataModelStore.selectedItem?.images}");
           return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
                 // Image.network("https://static.inshorts.com/inshorts/images/v1/variants/jpg/m/2023/06_jun/26_mon/img_1687750729843_888.jpg")
@@ -43,9 +41,12 @@ class SelectedNewsPage extends StatelessWidget {
                       debugPrint("${imageHeight / 100}");
                       return FractionallySizedBox(
                         heightFactor: imageHeight / 100,
-                        child: Image.network(
-                          "${dataModelStore.selectedItem?.images}",
-                          fit: BoxFit.cover,
+                        child: Hero(
+                          tag: '${dataModelStore.selectedItem?.images}',
+                          child: Image.network(
+                            "${dataModelStore.selectedItem?.images}",
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       );
                     },
@@ -56,7 +57,7 @@ class SelectedNewsPage extends StatelessWidget {
                   child: Text(
                     dataModelStore.selectedItem!.title ?? "",
                     style: const TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 25,
                     ),
@@ -69,7 +70,7 @@ class SelectedNewsPage extends StatelessWidget {
                     child: Text(
                       "${dataModelStore.selectedItem!.time}".substring(0, 16),
                       style: const TextStyle(
-                        color: Colors.grey,
+                        color: Colors.white70,
                         fontWeight: FontWeight.w500,
                         fontSize: 15,
                       ),
@@ -83,7 +84,7 @@ class SelectedNewsPage extends StatelessWidget {
                     child: Text(
                       "Written by ${dataModelStore.selectedItem!.author}",
                       style: const TextStyle(
-                        color: Colors.grey,
+                        color: Colors.white70,
                         fontWeight: FontWeight.w500,
                         fontSize: 17.5,
                       ),
@@ -101,7 +102,7 @@ class SelectedNewsPage extends StatelessWidget {
                     child: Text(
                       " ${dataModelStore.selectedItem!.decription}",
                       style: const TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontWeight: FontWeight.w300,
                         fontSize: 20,
                       ),
@@ -121,24 +122,30 @@ class SelectedNewsPage extends StatelessWidget {
 
               if (dataModelStore.listFavourites
                   .contains(dataModelStore.selectedItem)) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: const Text("Item is already added to favourites",style: TextStyle(fontSize: 20)),
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Item is already added to favourites",
+                      style: TextStyle(fontSize: 20, color: Colors.black)),
                   elevation: 25,
-                  duration: const Duration(seconds: 3),
-                  backgroundColor: Colors.teal.shade400,
-                  padding: const EdgeInsets.all(15),
+                  duration: Duration(seconds: 3),
+                  backgroundColor: Colors.white,
+                  padding: EdgeInsets.all(15),
                 ));
+              } else {
+                dataModelStore.addfavourites(dataModelStore.selectedItem!);
               }
-              else
-                {
-                  dataModelStore.addfavourites(dataModelStore.selectedItem!);
-                }
             },
+            shape: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                borderSide: BorderSide(width: 1.1, color: Colors.white)),
             foregroundColor: Colors.white,
             elevation: 25,
-            backgroundColor: Colors.teal.shade400,
-            child: dataModelStore.listFavourites.contains(dataModelStore.selectedItem)
-                ? const Icon(Icons.favorite_outlined)
+            backgroundColor: Colors.black,
+            child: dataModelStore.listFavourites
+                    .contains(dataModelStore.selectedItem)
+                ? const Icon(
+                    Icons.favorite_outlined,
+                    color: Colors.red,
+                  )
                 : const Icon(Icons.favorite_border_outlined),
           );
         },
